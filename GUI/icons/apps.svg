@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_1" xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 595.28 841.89">
+  <!-- Generator: Adobe Illustrator 30.1.0, SVG Export Plug-In . SVG Version: 2.1.1 Build 136)  -->
+  <defs>
+    <style>
+      .st0 {
+        fill: #8dc63f;
+      }
+
+      .st1 {
+        font-size: 15.65px;
+      }
+
+      .st1, .st2, .st3, .st4, .st5, .st6, .st7 {
+        fill: #231f20;
+      }
+
+      .st1, .st2, .st4, .st5, .st6, .st7 {
+        font-family: Arial-Black, 'Arial Black';
+        font-weight: 800;
+      }
+
+      .st2 {
+        font-size: 12.9px;
+      }
+
+      .st8 {
+        fill: #ed1c24;
+      }
+
+      .st3 {
+        font-family: MyriadPro-Regular, 'Myriad Pro';
+        font-size: 16px;
+      }
+
+      .st9 {
+        fill: #e2844f;
+      }
+
+      .st10 {
+        fill: none;
+        stroke: #231f20;
+        stroke-miterlimit: 10;
+        stroke-width: 2px;
+      }
+
+      .st4 {
+        font-size: 15.08px;
+      }
+
+      .st5 {
+        font-size: 15.71px;
+      }
+
+      .st6 {
+        font-size: 14.3px;
+      }
+
+      .st7 {
+        font-size: 16.83px;
+      }
+
+      .st11 {
+        fill: #009444;
+      }
+
+      .st12 {
+        fill: #fff200;
+      }
+    </style>
+  </defs>
+  <line class="st10" x1="87" y1="829.11" x2="87" y2="42.09"/>
+  <polygon class="st11" points="458.27 829.11 94.09 829.11 87 829.11 458.27 620.78 458.27 829.11"/>
+  <polygon class="st12" points="87 829.11 458.27 620.78 461 42.09 87 829.11"/>
+  <polygon class="st8" points="87 829.11 461 42.09 87 42.09 87 829.11"/>
+  <polygon class="st0" points="87 829.11 458.27 724.95 458.27 620.78 87 829.11"/>
+  <polygon class="st9" points="87 829.11 459.63 332.52 461 42.09 87 829.11"/>
+  <path class="st10" d="M87,829.11S128.63,218.85,125.9,130.47"/>
+  <path class="st10" d="M87,829.11S150.47,189.39,149.79,98.9"/>
+  <path class="st10" d="M87,829.11S198.24,176.77,196.2,79.97"/>
+  <path class="st10" d="M87,829.11S424.15,300.92,437.8,216.75"/>
+  <path class="st10" d="M87,829.11s294.83-90.49,320.08-134.68"/>
+  <path class="st10" d="M87,829.11s337.15,6.31,354.21-14.73"/>
+  <polyline class="st10" points="87 42.09 87 829.11 458.27 829.11"/>
+  <text class="st1" transform="translate(105.23 121.9) scale(.71 1)"><tspan x="0" y="0">O(n!)</tspan></text>
+  <text class="st6" transform="translate(141.61 92.48) scale(.59 1)"><tspan x="0" y="0">O(2 ^n)</tspan></text>
+  <text class="st2" transform="translate(201.14 73.2) scale(.75 1)"><tspan x="0" y="0">O(n^2)</tspan></text>
+  <text class="st7" transform="translate(404.77 205.19) scale(.56 1)"><tspan x="0" y="0">O(n log n)</tspan></text>
+  <text class="st4" transform="translate(400 683.63) scale(.73 1)"><tspan x="0" y="0">O(n)</tspan></text>
+  <text class="st5" transform="translate(405.19 803.48) scale(.47 1)"><tspan x="0" y="0">O(1), O(log n)</tspan></text>
+  <rect class="st11" x="87" width="66.72" height="33.67"/>
+  <rect class="st0" x="162.86" width="66.72" height="33.67"/>
+  <rect class="st12" x="235.86" width="66.72" height="33.67"/>
+  <rect class="st9" x="308.86" width="66.72" height="33.67"/>
+  <rect class="st8" x="384.72" width="76.28" height="33.67"/>
+  <text class="st3" transform="translate(99.61 22.11) scale(.69 1)"><tspan x="0" y="0">Excellent</tspan></text>
+  <text class="st3" transform="translate(250.96 24.21) scale(1.1 1)"><tspan x="0" y="0">Fair</tspan></text>
+  <text class="st3" transform="translate(329.44 21.93) scale(1.12 1)"><tspan x="0" y="0">Bad</tspan></text>
+  <text class="st3" transform="translate(395.86 22.27) scale(.8 1)"><tspan x="0" y="0">Horrible</tspan></text>
+  <text class="st3" transform="translate(182.77 24.38)"><tspan x="0" y="0">Good</tspan></text>
+</svg>
