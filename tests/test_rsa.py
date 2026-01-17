@@ -26,7 +26,7 @@ def test_key_generation_returns_two_keys():
 def test_encrypt_decrypt_roundtrip_simple_message():
     public_key, private_key = generate_rsa_keys(bits=16)
 
-    message = "hello RSA!"
+    message = "winchester"
     cipher = rsa_encrypt_message(message, public_key)
     plain = rsa_decrypt_message(cipher, private_key)
 
@@ -38,7 +38,7 @@ def test_encrypt_decrypt_roundtrip_simple_message():
 def test_encrypt_decrypt_roundtrip_with_unicode():
     public_key, private_key = generate_rsa_keys(bits=16)
 
-    message = "Hello 👋🏽"
+    message = "assignment"
     cipher = rsa_encrypt_message(message, public_key)
     plain = rsa_decrypt_message(cipher, private_key)
 
