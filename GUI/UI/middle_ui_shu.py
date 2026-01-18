@@ -16,7 +16,7 @@ from PyQt5.QtWidgets import (
     QApplication, QWidget, QVBoxLayout, QHBoxLayout, QLabel,
     QGroupBox, QPushButton, QComboBox, QTextEdit
 )
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt,pyqtSignal
 
 class ShuffleCardsMiddlePanel(QWidget):
     """
@@ -27,6 +27,7 @@ class ShuffleCardsMiddlePanel(QWidget):
     Instead, it collects user selections and displays the shuffled output
     produced by the main application logic.
     """
+    runClicked = pyqtSignal()
 
     def __init__(self):
         """
@@ -86,6 +87,7 @@ class ShuffleCardsMiddlePanel(QWidget):
 
         self.shuffle_btn = QPushButton("SHUFFLE CARDS")
         self.shuffle_btn.setObjectName("runButton")
+        self.shuffle_btn.clicked.connect(self.runClicked.emit)
         self.shuffle_btn.setCursor(Qt.PointingHandCursor)
         self.shuffle_btn.setFixedWidth(160)
 
@@ -111,6 +113,48 @@ class ShuffleCardsMiddlePanel(QWidget):
         # Add the card to the root layout
         root.addWidget(card)
         root.addStretch(1)
+
+    def get_input(self):
+        """
+        Returns user input for the Shuffle Deck algorithm.
+
+        Since the shuffle operation does not require any text input
+        from the user, this method simply returns an empty string.
+
+        Keeping this method allows all algorithm panels to follow
+        the same interface structure.
+        """
+
+        # Shuffle Deck does not need user input
+        return ""
+
+    def get_options(self):
+        """
+        Returns user-selected options for the Shuffle Deck algorithm.
+
+        This method returns an empty dictionary because no additional
+        options (like mode or parameters) are required at this stage.
+
+        Maintaining this method ensures consistency across all panels.
+        """
+
+        # No options required
+        return {}
+
+    def set_output(self, text):
+        """
+        Displays the shuffled deck output in the UI.
+
+        Parameters:
+        - text (str): A string representing the shuffled card order
+
+        This method:
+        - Updates the output display area
+        - Supports QTextEdit or QLineEdit depending on the UI design
+        """
+
+        # Display the shuffled deck in the output area
+        self.output.setPlainText(text)  # Use setText() if QLineEdit is used
 
     def styles(self):
         """

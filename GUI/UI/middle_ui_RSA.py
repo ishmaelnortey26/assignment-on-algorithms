@@ -17,7 +17,7 @@ from PyQt5.QtWidgets import (
     QApplication, QWidget, QVBoxLayout, QHBoxLayout, QLabel, QGroupBox,
     QTextEdit, QLineEdit, QPushButton, QRadioButton, QButtonGroup
 )
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt,pyqtSignal
 
 class RSAMiddlePanel(QWidget):
     """
@@ -28,6 +28,7 @@ class RSAMiddlePanel(QWidget):
     (controller) should listen for this signal, run RSA logic, then call
     set_output(...) to display results.
     """
+    runClicked = pyqtSignal()
 
     def __init__(self):
         """
@@ -142,6 +143,7 @@ class RSAMiddlePanel(QWidget):
 
         self.run_btn = QPushButton("RUN")
         self.run_btn.setObjectName("runButton")
+        self.run_btn.clicked.connect(self.runClicked.emit)
         self.run_btn.setCursor(Qt.PointingHandCursor)
         self.run_btn.setFixedWidth(90)
         run_row.addWidget(self.run_btn, alignment=Qt.AlignLeft)
@@ -171,6 +173,129 @@ class RSAMiddlePanel(QWidget):
         """
         self.public_key.setEnabled(checked)
         self.private_key.setEnabled(checked)
+
+    def get_input(self):
+        """
+        Returns the message entered by the user.
+
+        This method:
+        - Reads the text from the message input box
+        - Returns it as a string for encryption or decryption
+
+
+        """
+
+        # Get the full text entered from the message QTextEdit
+        return self.message_in.toPlainText()
+
+    def get_options(self):
+        """
+        Collects and returns all RSA-related options selected by the user.
+
+        This method determines:
+        - Whether the user wants to encrypt or decrypt
+        - Whether the user wants to use their own keys or system-generated keys
+        - Which keys to use (public or private), if provided
+
+        Returns:
+        - options (dict): A dictionary containing RSA configuration options
+        """
+
+        # Determine selected action
+        action = "encrypt" if self.rb_encrypt.isChecked() else "decrypt"
+
+        # Check whether user wants to provide their own keys
+        use_user_keys = self.rb_keys_yes.isChecked()
+
+        # Base options dictionary
+        options = {
+            "action": action,
+            "use_user_keys": use_user_keys,
+            "bits": 16  # Key size used when system generates keys automatically
+        }
+
+        # If user chooses to supply their own keys
+        if use_user_keys:
+            try:
+                if action == "encrypt":
+                    # Expect public key input in the form: "e,n"
+                    parts = [p.strip() for p in self.public_key.text().split(",")]
+
+                    if len(parts) == 2:
+                        e = int(parts[0])
+                        n = int(parts[1])
+                        options["public_key"] = (e, n)
+
+                else:
+                    # Expect private key input in the form: "d,n"
+                    parts = [p.strip() for p in self.private_key.text().split(",")]
+
+                    if len(parts) == 2:
+                        d = int(parts[0])
+                        n = int(parts[1])
+                        options["private_key"] = (d, n)
+
+            except Exception:
+                pass
+
+        return options
+
+    def set_output(self, text):
+        """
+        Displays the RSA output (encrypted or decrypted message) in the UI.
+
+        Parameters:
+        - text (str): The result produced by the RSA algorithm
+
+        This method:
+        - Converts the output to string (for safety)
+        - Displays it in the output text area
+        """
+
+        # Display the result in the output QTextEdit
+        self.output.setPlainText(str(text))
+
+
+    # UI behaviour
+
+
+    def _refresh_key_fields(self, *_):
+        """
+        Enables or disables RSA key input fields based on user selection.
+
+        This method:
+        - Checks whether the user selected Encrypt or Decrypt
+        - Checks whether the user wants to use their own keys
+        - Enables only the relevant key input fields
+        - Disables all others to prevent incorrect input
+
+        The `*_` parameter allows this method to safely receive
+        extra arguments from Qt signals.
+        """
+
+        # Determine current action
+        action = "encrypt" if self.rb_encrypt.isChecked() else "decrypt"
+
+        # Check whether user enabled custom keys
+        use = self.cb_user_keys.isChecked()
+
+        # Disable all key-related input fields by default
+        for w in (self.e_input, self.n_public_input, self.d_input, self.n_private_input):
+            w.setEnabled(False)
+
+        # If user does not want to use custom keys, stop here
+        if not use:
+            return
+
+        # Enable only the fields required for the selected action
+        if action == "encrypt":
+            # Encryption needs public key (e, n)
+            self.e_input.setEnabled(True)
+            self.n_public_input.setEnabled(True)
+        else:
+            # Decryption needs private key (d, n)
+            self.d_input.setEnabled(True)
+            self.n_private_input.setEnabled(True)
 
     def styles(self):
         """

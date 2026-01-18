@@ -19,7 +19,8 @@ from PyQt5.QtWidgets import (
     QApplication, QWidget, QVBoxLayout, QHBoxLayout, QLabel,
     QGroupBox, QLineEdit, QPushButton, QRadioButton, QButtonGroup
 )
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt, pyqtSignal
+
 
 class StatisticsMiddlePanel(QWidget):
     """
@@ -32,6 +33,7 @@ class StatisticsMiddlePanel(QWidget):
     - emit a RUN signal so the main window can compute results
     - display the chosen statistic value in a read-only output field
     """
+    runClicked = pyqtSignal()
 
     def __init__(self):
         """
@@ -100,6 +102,7 @@ class StatisticsMiddlePanel(QWidget):
 
         self.run_btn = QPushButton("RUN")
         self.run_btn.setObjectName("runButton")
+        self.run_btn.clicked.connect(self.runClicked.emit)
         self.run_btn.setCursor(Qt.PointingHandCursor)
         self.run_btn.setFixedWidth(90)
         run_row.addWidget(self.run_btn, alignment=Qt.AlignLeft)
@@ -127,6 +130,120 @@ class StatisticsMiddlePanel(QWidget):
         # Add the card to the root layout
         root.addWidget(card)
         root.addStretch(1)
+
+    def _format_number(self, value):
+        """
+        Formats a numeric value before displaying it in the UI.
+
+        This method:
+        - Checks if the value is a float that represents a whole number
+          (e.g. 5.0)
+        - Converts it to an integer string ("5") instead of showing "5.0"
+        - Returns all other values as strings normally
+
+        This helps keep the output clean and user-friendly.
+        """
+
+        # If value is a float and has no decimal part (e.g. 10.0)
+        if isinstance(value, float) and value.is_integer():
+            return str(int(value))
+
+        # Otherwise, return value as string
+        return str(value)
+
+    def get_input(self):
+        """
+        Returns the user input containing the list of numbers.
+
+        This method:
+        - Reads the text entered by the user
+        - Returns it as a string for processing by the statistics logic
+
+        NOTE:
+        - Use .text() if the input widget is QLineEdit
+        - Use .toPlainText() if the input widget is QTextEdit
+        """
+
+        # Get input text from QLineEdit
+        return self.input_list.text()
+
+        # Alternative if QTextEdit is used:
+        # return self.input_list.toPlainText()
+
+    def set_results(self, stats):
+        """
+        Displays the calculated statistics result in the UI.
+
+        Parameters:
+        - stats (dict): A dictionary containing calculated statistics,
+          such as:
+            {
+              "largest": value,
+              "smallest": value,
+              "mean": value,
+              "median": value,
+              "mode": list or None,
+              "q1": value,
+              "q3": value
+            }
+
+        This method:
+        - Detects which radio button is selected
+        - Extracts the corresponding statistic from the dictionary
+        - Formats the result
+        - Displays it in the output field
+        """
+
+        # Decide what result to show based on selected radio button
+        if self.rb_max.isChecked():
+            value = stats["largest"]
+
+        elif self.rb_min.isChecked():
+            value = stats["smallest"]
+
+        elif self.rb_mean.isChecked():
+            # Mode may return multiple values or None
+            mode = stats["mode"]
+            value = "No mode" if mode is None else ", ".join(str(x) for x in mode)
+
+        elif self.rb_median.isChecked():
+            value = stats["median"]
+
+        elif self.rb_mode.isChecked():
+            # Q1 (first quartile)
+            value = stats["q1"]
+
+        elif self.rb_mode2.isChecked():
+            # Q3 (third quartile)
+            value = stats["q3"]
+
+        else:
+            value = ""
+
+        # Display formatted result in the output field
+        self.result_output.setText(self._format_number(value))
+
+    def _update_result_label(self, *_):
+        """
+        Updates the result label based on the currently selected radio button.
+
+        This method:
+        - Detects which radio button is currently selected
+        - Reads the text of that radio button
+        - Updates the result label to match the selected operation
+
+        The `*_` parameter is used to safely accept extra arguments
+        from Qt signals that are not needed in this method.
+        """
+
+        # Get the currently selected radio button from the button group
+        btn = self.op_group.checkedButton()
+
+        # Ensure a button is selected and the result label exists
+        if btn and hasattr(self, "result_label"):
+            # Update the label text to match the selected option
+            self.result_label.setText(btn.text())
+
 
     def styles(self):
         """

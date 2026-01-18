@@ -16,11 +16,12 @@ and invoked by the main application logic.
 
 import sys
 
-from PyQt5.QtCore import Qt
+
 from PyQt5.QtWidgets import (
     QApplication, QWidget, QVBoxLayout, QHBoxLayout, QLabel,
     QGroupBox, QLineEdit, QPushButton
 )
+from PyQt5.QtCore import Qt,pyqtSignal
 
 class FibonacciMiddlePanel(QWidget):
     """
@@ -35,6 +36,7 @@ class FibonacciMiddlePanel(QWidget):
     The panel emits a signal when the CALCULATE button is clicked so that
     the main application can perform the computation.
     """
+    runClicked = pyqtSignal()
 
     def __init__(self):
         """
@@ -77,6 +79,7 @@ class FibonacciMiddlePanel(QWidget):
 
         self.run_btn = QPushButton("CALCULATE")
         self.run_btn.setObjectName("runButton")
+        self.run_btn.clicked.connect(self.runClicked.emit)
         self.run_btn.setCursor(Qt.PointingHandCursor)
         self.run_btn.setFixedWidth(120)
         run_row.addWidget(self.run_btn, alignment=Qt.AlignLeft)
@@ -98,6 +101,49 @@ class FibonacciMiddlePanel(QWidget):
         # Add the card to the root layout
         root.addWidget(card)
         root.addStretch(1)
+
+    def get_input(self):
+        """
+        Returns the user input for the Fibonacci calculation.
+
+        This method:
+        - Reads the value entered by the user
+        - Returns it as a string for processing by the Fibonacci logic
+
+
+        """
+
+        # Get and return the input number as text
+        return self.input_n.text()  # or self.input_n.toPlainText()
+
+    def get_options(self):
+        """
+        Returns user-selected options for the Fibonacci algorithm.
+
+        Fibonacci does not require any additional options
+        (such as mode or direction), so this method returns
+        an empty dictionary.
+
+
+        """
+
+        # No options required for Fibonacci
+        return {}
+
+    def set_output(self, text):
+        """
+        Displays the Fibonacci result in the output field.
+
+        Parameters:
+        - text (str): The calculated Fibonacci value
+
+        This method:
+        - Updates the output widget
+        - Ensures the result is shown to the user
+        """
+
+        # Display the Fibonacci result
+        self.output.setText(text)
 
     def styles(self):
         """

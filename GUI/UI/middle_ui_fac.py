@@ -11,7 +11,7 @@ application logic or algorithm module.
 """
 import sys
 
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt, pyqtSignal
 from PyQt5.QtWidgets import (
     QApplication, QWidget, QVBoxLayout, QHBoxLayout, QLabel,
     QGroupBox, QLineEdit, QPushButton
@@ -30,6 +30,7 @@ class FactorialMiddlePanel(QWidget):
     The panel emits a signal when the CALCULATE button is clicked so that
     the main application can perform the computation.
     """
+    runClicked = pyqtSignal()
 
     def __init__(self):
         """
@@ -74,6 +75,7 @@ class FactorialMiddlePanel(QWidget):
         run_row = QHBoxLayout()
         self.run_btn = QPushButton("CALCULATE")
         self.run_btn.setObjectName("runButton")
+        self.run_btn.clicked.connect(self.runClicked.emit)
         self.run_btn.setCursor(Qt.PointingHandCursor)
         self.run_btn.setFixedWidth(120)
 
@@ -96,6 +98,48 @@ class FactorialMiddlePanel(QWidget):
         # Add the card to the root layout
         root.addWidget(card)
         root.addStretch(1)
+
+    def get_input(self):
+        """
+        Returns the user input for the factorial calculation.
+
+        This method:
+        - Reads the number entered by the user
+        - Returns it as a string for processing by the factorial logic
+
+
+        """
+
+        # Get and return the input value
+        return self.input_n.text()  # or .toPlainText() depending on widget type
+
+    def get_options(self):
+        """
+        Returns user-selected options for the factorial algorithm.
+
+        Factorial does not require any additional options,
+        so this method returns an empty dictionary.
+
+
+        """
+
+        # No options required for factorial
+        return {}
+
+    def set_output(self, text):
+        """
+        Displays the factorial result in the output field.
+
+        Parameters:
+        - text (str): The calculated factorial value
+
+        This method:
+        - Updates the output widget
+        - Shows the result to the user
+        """
+
+        # Display the factorial result
+        self.output.setText(text)
 
     def styles(self):
         """

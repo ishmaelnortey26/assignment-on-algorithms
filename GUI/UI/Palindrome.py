@@ -16,7 +16,7 @@ from PyQt5.QtWidgets import (
     QApplication, QWidget, QVBoxLayout, QHBoxLayout, QLabel,
     QGroupBox, QTextEdit, QLineEdit, QPushButton
 )
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt,pyqtSignal
 
 class PalindromeSubstringMiddlePanel(QWidget):
     """
@@ -31,6 +31,7 @@ class PalindromeSubstringMiddlePanel(QWidget):
     The panel emits a signal when the user clicks the COUNT button so that
     the main application can perform the computation.
     """
+    runClicked = pyqtSignal()
 
     def __init__(self):
         """
@@ -74,6 +75,7 @@ class PalindromeSubstringMiddlePanel(QWidget):
 
         self.count_btn = QPushButton("COUNT SUBSTRING")
         self.count_btn.setObjectName("runButton")
+        self.count_btn.clicked.connect(self.runClicked.emit)
         self.count_btn.setCursor(Qt.PointingHandCursor)
         self.count_btn.setFixedWidth(180)
 
@@ -112,6 +114,56 @@ class PalindromeSubstringMiddlePanel(QWidget):
 
         # Push everything upwards (keeps the UI neat)
         root.addStretch(1)
+
+    def get_input(self):
+        """
+        Returns the user input from the text box.
+
+        This method:
+        - Reads the text entered by the user
+        - Returns it as a normal Python string
+
+        It is usually called by the controller or logic layer
+        to fetch user input for processing.
+        """
+
+        # Get and return all text from the QTextEdit widget
+        return self.input_text.toPlainText()
+
+    def get_options(self):
+        """
+        Returns user-selected options for the algorithm.
+
+        Since Fibonacci does not require any additional options
+        (like mode, order, or settings), this method returns
+        an empty dictionary.
+
+        Keeping this method allows all algorithm panels to
+        follow the same interface structure.
+        """
+
+        # No options needed for Fibonacci
+        return {}
+
+    def set_results(self, found_text, total_count):
+        """
+        Displays the results of the algorithm in the UI.
+
+        Parameters:
+        - found_text (str): A string showing the found palindromes
+          or a summary of results
+        - total_count (int): The total number of palindromes found
+
+        This method:
+        - Updates the output fields in the UI
+        - Converts numbers to string before displaying
+        """
+
+        # Display the list or summary of palindromes
+        self.found_output.setText(found_text)
+
+        # Display total count (convert integer to string)
+        self.total_output.setText(str(total_count))
 
     def styles(self):
         """

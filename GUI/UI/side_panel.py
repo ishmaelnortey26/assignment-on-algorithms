@@ -21,6 +21,7 @@ class SidePanel(QWidget):
     The widget emits a signal whenever an algorithm button is clicked,
     allowing the main application to react without tight coupling.
     """
+    algorithmSelected = pyqtSignal(str)
 
     def __init__(self):
         """
@@ -94,6 +95,31 @@ class SidePanel(QWidget):
 
         # Add the container widget to the main layout
         main_layout.addWidget(container)
+
+    def _on_algo_clicked(self):
+        """
+        Slot function that is called when any algorithm button is clicked.
+
+        This method:
+        1. Detects which button was clicked
+        2. Reads the algorithm key stored inside that button
+        3. Emits a signal with the selected algorithm key
+
+        This allows the main window to know which algorithm
+        the user selected from the side panel.
+        """
+
+        # Get the button that triggered this function
+        btn = self.sender()
+
+        # Retrieve the custom property stored in the button
+        # (e.g. "rsa", "fibonacci", "bubble_sort")
+        algo_key = btn.property("algo_key")
+
+        # If a valid algorithm key exists
+        if algo_key:
+            # Emit the signal with the selected algorithm key
+            self.algorithmSelected.emit(algo_key)
 
     def section(self, title, items):
         """

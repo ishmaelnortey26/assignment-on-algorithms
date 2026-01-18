@@ -14,6 +14,7 @@ This class acts as the *coordinator* between:
 
 # GUI/main_window.py
 import sys
+from time import perf_counter
 
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import (
@@ -25,6 +26,7 @@ from PyQt5.QtWidgets import (
 # from design_patterns import AlgorithmManager
 
 # GUI panels
+from design_patterns import AlgorithmManager
 from side_panel import SidePanel
 from right_panel import PerformancePanel
 
@@ -58,7 +60,7 @@ class MainUI(QMainWindow):
         self.resize(1100, 650)
 
         # Facade: central backend controller for algorithms
-        # self.manager = AlgorithmManager()
+        self.manager = AlgorithmManager()
 
         # ROOT LAYOUT
 
@@ -184,8 +186,8 @@ class MainUI(QMainWindow):
         }
 
         # Listen for user selecting an algorithm
-        # self.side_panel.algorithmSelected.connect(self.on_algorithm_selected)
-        # self.on_algorithm_selected("RSA")
+        self.side_panel.algorithmSelected.connect(self.on_algorithm_selected)
+        self.on_algorithm_selected("RSA")
 
     # HELPER METHODS
 
@@ -215,7 +217,6 @@ class MainUI(QMainWindow):
 
 
     # EVENT HANDLERS
-
 
     def on_algorithm_selected(self, algo_key):
         """
@@ -265,6 +266,22 @@ class MainUI(QMainWindow):
         options = page.get_options() if hasattr(page, "get_options") else {}
 
         output, result = self.manager.execute(raw_input, options)
+
+        # START TIMER
+        start = perf_counter()
+        # Run the algorithm (backend)
+        output, result = self.manager.execute(raw_input, options)
+
+        # ---- END TIMER ----
+        end = perf_counter()
+        elapsed_seconds = end - start
+
+        # Show timing on the right panel (format nicely)
+
+        if elapsed_seconds < 1:
+            self.right_panel.time_lbl.setText(f"Time: {elapsed_seconds * 1000:.3f} ms")
+        else:
+            self.right_panel.time_lbl.setText(f"Time: {elapsed_seconds:.4f} s")
 
         # Handle different result types
 

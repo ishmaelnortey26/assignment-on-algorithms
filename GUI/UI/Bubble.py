@@ -14,7 +14,7 @@ The panel is designed to be reusable for multiple sorting algorithms
 
 import sys
 
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt,pyqtSignal
 from PyQt5.QtWidgets import (
     QApplication, QWidget, QVBoxLayout, QHBoxLayout, QLabel,
     QGroupBox, QLineEdit, QPushButton, QRadioButton, QButtonGroup
@@ -30,6 +30,7 @@ class BubbleSortMiddlePanel(QWidget):
     the RUN button is clicked so that the main application can
     execute the selected algorithm.
     """
+    runClicked = pyqtSignal()
 
     def __init__(self):
         """
@@ -45,6 +46,7 @@ class BubbleSortMiddlePanel(QWidget):
         super().__init__()
         # Apply QSS styling to the widget
         self.setStyleSheet(self.styles())
+        self.current_sort = "BubbleSort"
 
         # Root layout for the panel
         root = QVBoxLayout(self)
@@ -93,6 +95,7 @@ class BubbleSortMiddlePanel(QWidget):
 
         self.run_btn = QPushButton("RUN")
         self.run_btn.setObjectName("runButton")
+        self.run_btn.clicked.connect(self.runClicked.emit)
         self.run_btn.setCursor(Qt.PointingHandCursor)
         self.run_btn.setFixedWidth(90)
 
@@ -114,6 +117,79 @@ class BubbleSortMiddlePanel(QWidget):
         # Add the card to the root layout
         root.addWidget(self.card)
         root.addStretch(1)
+
+    def get_input(self):
+        """
+        Returns the list of numbers entered by the user.
+
+        This method:
+        - Reads the text from the input field
+        - Returns it as a string (e.g. "5, 2, 9, 1")
+
+        """
+
+        # Get and return input text from QLineEdit
+        return self.input_list.text()
+
+    def get_options(self):
+        """
+        Returns user-selected options for the sorting algorithm.
+
+        This method:
+        - Checks which sort order radio button is selected
+        - Returns the selected order as part of an options dictionary
+
+        Returns:
+        - dict with key "order" having value "Ascending" or "Descending"
+        """
+
+        return {
+            "order": "Ascending" if self.rb_asc.isChecked() else "Descending"
+        }
+
+    def set_output(self, text):
+        """
+        Displays the sorted result in the output field.
+
+        Parameters:
+        - text (str): The sorted list converted to string
+
+        This method:
+        - Updates the output widget
+        - Shows the sorting result to the user
+        """
+
+        # Display the sorted output
+        self.output.setText(text)
+
+    #  NEW: called by MainWindow when sidebar button changes
+    def set_sort_mode(self, algo_key):
+        """
+        Updates the sorting mode and UI title based on sidebar selection.
+
+        Parameters:
+        - algo_key (str): Identifier of the selected sorting algorithm
+          (e.g. "BubbleSort", "SelectionSort", "MergeSort")
+
+        This method:
+        - Stores the currently selected sorting algorithm
+        - Updates the card title to reflect the chosen algorithm
+        - Allows the same UI panel to be reused for multiple sorts
+        """
+
+        # Store the selected sorting algorithm
+        self.current_sort = algo_key
+
+        # Update card title based on selected algorithm
+        if algo_key == "BubbleSort":
+            self.card.setTitle("Bubble Sort")
+        elif algo_key == "SelectionSort":
+            self.card.setTitle("Selection Sort")
+        elif algo_key == "MergeSort":
+            self.card.setTitle("Merge Sort")
+        else:
+            # Fallback title if algorithm is unknown
+            self.card.setTitle("Sorting")
 
     def styles(self):
         """
