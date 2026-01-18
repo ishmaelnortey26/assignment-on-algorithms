@@ -72,8 +72,7 @@ class ShuffleCardsMiddlePanel(QWidget):
         # Example deck options
         self.deck_combo.addItems([
             "standard 52 cards",
-            "short deck (36 cards)",
-            "custom deck"
+
         ])
 
         combo_row.addWidget(self.deck_combo, alignment=Qt.AlignLeft)

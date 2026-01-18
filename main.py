@@ -1,15 +1,22 @@
 import sys
-from PyQt5.QtWidgets import QApplication, QMainWindow
+from PyQt5.QtWidgets import QApplication
+from PyQt5.QtCore import Qt
 
-class MainWindow(QMainWindow):
-    def __init__(self):
-        super().__init__()
-        self.setWindowTitle("My PyQt5 App")
-        self.setGeometry(100, 100, 800, 600)
-        # Add widgets here
+from GUI.UI.main_window import MainUI
 
-if __name__ == '__main__':
+
+def main():
+    # Enable HiDPI scaling (important on macOS / Retina)
+    QApplication.setAttribute(Qt.AA_EnableHighDpiScaling, True)
+    QApplication.setAttribute(Qt.AA_UseHighDpiPixmaps, True)
+
     app = QApplication(sys.argv)
-    window = MainWindow()
+
+    window = MainUI()
     window.show()
+
     sys.exit(app.exec_())
+
+
+if __name__ == "__main__":
+    main()

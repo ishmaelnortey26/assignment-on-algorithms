@@ -27,17 +27,17 @@ from PyQt5.QtWidgets import (
 
 # GUI panels
 from design_patterns import AlgorithmManager
-from side_panel import SidePanel
-from right_panel import PerformancePanel
+from GUI.UI.side_panel import SidePanel
+from GUI.UI.right_panel import PerformancePanel
 
 # Middle panels (algorithm-specific UIs)
-from Bubble import BubbleSortMiddlePanel
-from middle_ui_fac import FactorialMiddlePanel
-from middle_ui_fib import FibonacciMiddlePanel
-from middle_ui_shu import ShuffleCardsMiddlePanel
-from Palindrome import PalindromeSubstringMiddlePanel
-from middle_ui_sta import StatisticsMiddlePanel
-from middle_ui_RSA import RSAMiddlePanel
+from GUI.UI.Bubble import BubbleSortMiddlePanel
+from GUI.UI.middle_ui_fac import FactorialMiddlePanel
+from GUI.UI.middle_ui_fib import FibonacciMiddlePanel
+from GUI.UI.middle_ui_shu import ShuffleCardsMiddlePanel
+from GUI.UI.Palindrome import PalindromeSubstringMiddlePanel
+from GUI.UI.middle_ui_sta import StatisticsMiddlePanel
+from GUI.UI.middle_ui_RSA import RSAMiddlePanel
 
 
 class MainUI(QMainWindow):
@@ -180,7 +180,7 @@ class MainUI(QMainWindow):
             ),
             "PalindromeDP": (
                 "O(n²)",
-                "This algorithm finds all substrings that read the same forwards and backwards..eg..level,racecar.",
+                "This algorithm finds all substrings that read the same forwards and backwards..eg..level.",
 
             ),
         }
@@ -250,7 +250,7 @@ class MainUI(QMainWindow):
         # Update right panel info
         info = self.algo_info.get(algo_key)
         if info:
-            name, desc, category, complexity = info
+            name, desc,  = info
             self.right_panel.set_algorithm(name, desc)
         else:
             self.right_panel.set_algorithm(algo_key, "")

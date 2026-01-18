@@ -6,7 +6,7 @@ different algorithm demonstrations (e.g., sorting, recursion, encryption).
 """
 import os
 import sys
-from PyQt5.QtGui import QIcon
+from PyQt5.QtGui import QIcon, QFont, QFontDatabase
 from PyQt5.QtWidgets import (
     QWidget, QVBoxLayout, QLabel, QScrollArea, QGroupBox,
     QPushButton, QApplication
@@ -53,10 +53,25 @@ class SidePanel(QWidget):
         container_layout = QVBoxLayout(container)
         container_layout.setAlignment(Qt.AlignTop)
 
+         # load font
+        font_path = os.path.join(base_dir, "fonts", "Pokemon Hollow.ttf")
+        print("FONT PATH:", font_path, "Exists?", os.path.exists(font_path))
+
+        font_id = QFontDatabase.addApplicationFont(font_path)
+        if font_id != -1:
+            family = QFontDatabase.applicationFontFamilies(font_id)[0]
+            title_font = QFont(family)
+        else:
+            print("Failed to load font, using default.")
+            title_font = QFont()  # fallback
+
         # Application title
         title = QLabel("AlgoLab")
         title.setObjectName("title")
-        title.setStyleSheet("font-family: Pokemon Hollow, Segue UI;")
+        title.setFont(QFont(family))
+        print("Loaded font family:", family)
+
+        # title.setStyleSheet("font-family: Pokemon Solid, Segoe UI;")
         container_layout.addWidget(title)
 
         # Encryption section
@@ -89,9 +104,9 @@ class SidePanel(QWidget):
         ]))
 
         # Exit button (handled by parent application logic)
-        close = QPushButton("Exit")
-        close.setObjectName("algoButton1")
-        container_layout.addWidget(close)
+        # close = QPushButton("Exit")
+        # close.setObjectName("algoButton1")
+        # container_layout.addWidget(close)
 
         # Add the container widget to the main layout
         main_layout.addWidget(container)
@@ -148,6 +163,7 @@ class SidePanel(QWidget):
 
             # Store algorithm identifier in button properties
             btn.setProperty("algo_key", algo_key)
+            btn.clicked.connect(self._on_algo_clicked)
 
             # Load icon if it exists
             icon_path = os.path.join(self.icons_dir, icon)
@@ -170,7 +186,7 @@ class SidePanel(QWidget):
         return """
         QWidget {
             background: #ffffff;
-            font-family: Segue UI;
+            
             font-size: 14px;
         }
 
@@ -179,7 +195,7 @@ class SidePanel(QWidget):
             font-size: 40px;
             font-weight: bold;
             padding: 5px 10px;
-            font-family: Segue UI;
+           
         }
 
         QGroupBox {
@@ -225,6 +241,7 @@ class SidePanel(QWidget):
         """
 
 
+
 if __name__ == "__main__":
     """
     Standalone execution block used for testing the SidePanel widget
@@ -233,6 +250,8 @@ if __name__ == "__main__":
     # Enable high DPI scaling for modern displays
     QApplication.setAttribute(Qt.AA_EnableHighDpiScaling, True)
     QApplication.setAttribute(Qt.AA_UseHighDpiPixmaps, True)
+
+
 
     app = QApplication(sys.argv)
     w = SidePanel()
